@@ -1,6 +1,6 @@
 # tapotin
 
-![tapotin](https://github.com/guenael/tapotin/art/tapotin-pcb.png)
+![tapotin](https://github.com/Guenael/tapotin/blob/main/art/tapotin-pcb.png)
 ![Last commit](https://img.shields.io/github/last-commit/Guenael/tapotin)
 ![Commit activity](https://img.shields.io/github/commit-activity/m/Guenael/tapotin)
 
