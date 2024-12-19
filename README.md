@@ -54,21 +54,24 @@ Enter the bootloader mode by holding the RP2040 reset button down while plugging
 
 ## Compile/Build notes (TODO)
 
-  1. Clone this repository:
-    ```bash
-    git clone https://github.com/Guenael/tapotin
-    cd tapotin
-    git submodule update --init --recursive
-    cd qmk_firmware
-    ```
-  2. Build the application:
-    ```bash
-    make tapotin:default
-    ```
-  3. Flash the Raspberry Pico:
-    ```bash
-    make tapotin:default:flash
-    ```
+1. Clone this repository:
+
+```bash
+git clone https://github.com/Guenael/tapotin
+cd tapotin
+git submodule update --init --recursive
+cd qmk_firmware
+```
+2. Build the application:
+
+```bash
+make tapotin:default
+```
+3. Flash the Raspberry Pico:
+
+```bash
+make tapotin:default:flash
+```
 
 ## Documentation
 
