@@ -5,9 +5,8 @@
 #include QMK_KEYBOARD_H
 
 /* Timer for Keyboard jiggler function (ping every minute) */
-#define IDLE_TIMEOUT_MS 60000
+#define IDLE_TIMEOUT_MS 299995 // 5 minutes - 5 ms
 
-#define MY_REDO C(KC_Y) // Issue with MacOS
 #define MY_PSTE C(KC_V)
 #define MY_COPY C(KC_C)
 #define MY_CUT  C(KC_X)
@@ -36,7 +35,8 @@ enum custom_keycodes {
     ACC_EC,
     ACC_CC,
     ACC_UG,
-    ACC_AG
+    ACC_AG,
+    S_DEG
 };
 
 /* Support multiples OS, Linux=0 (default), MacOS=1, Windows=2 */
@@ -55,7 +55,6 @@ const key_override_t central_remap_1 = ko_make_basic(MOD_MASK_SHIFT, KC_LPRN, KC
 const key_override_t central_remap_2 = ko_make_basic(MOD_MASK_SHIFT, KC_RPRN, KC_DQUO); // LSFT(KC_QUOT)
 const key_override_t central_remap_3 = ko_make_basic(MOD_MASK_SHIFT, KC_DOT,  KC_COLN); // LSFT(KC_SCLN)
 const key_override_t central_remap_4 = ko_make_basic(MOD_MASK_SHIFT, KC_COMM, KC_SCLN); // KC_SCLN
-
 const key_override_t *key_overrides[] = {
     &central_remap_1,
     &central_remap_2,
@@ -67,22 +66,20 @@ const key_override_t *key_overrides[] = {
  * Caps-lock, Caps-lock toggle & custom message 
  */
 enum combo_events {
-  CAPS, BOOT, MSG1, MSG2, MSG3
+  CAPS, BOOT, REBOOT, MSG1, MSG2
 };
-const uint16_t PROGMEM c_caps[]  = {KC_LSFT, KC_RSFT, COMBO_END};             // = Double Side Shift
-const uint16_t PROGMEM c_boot[]  = {KC_LALT, KC_W, KC_K, KC_GRV, COMBO_END};  // = 2x 2x Lat Top
-const uint16_t PROGMEM c_msg1[]  = {KC_Y, KC_LPRN, KC_RPRN, COMBO_END};
-const uint16_t PROGMEM c_msg2[]  = {KC_Y, KC_LPRN, KC_J, COMBO_END};
-const uint16_t PROGMEM c_msg3[]  = {KC_Y, KC_LPRN, KC_C, COMBO_END};
+const uint16_t PROGMEM c_caps[]   = {KC_LSFT, KC_RSFT, COMBO_END};             // = Double Side Shift
+const uint16_t PROGMEM c_reboot[] = {KC_LALT, KC_W, KC_K, KC_GRV, COMBO_END};  // = ..   ---   .. Lat Top
+const uint16_t PROGMEM c_boot[]   = {KC_LALT, KC_M, KC_P, KC_GRV, COMBO_END};  // = ._.  ---  ._. Lat Top
+const uint16_t PROGMEM c_msg1[]   = {KC_Y, KC_LPRN, KC_RPRN, COMBO_END};
+const uint16_t PROGMEM c_msg2[]   = {KC_Y, KC_LPRN, KC_J, COMBO_END};
 combo_t key_combos[] = {
-  [CAPS]  = COMBO(c_caps, KC_CAPS),
-  [BOOT]  = COMBO(c_boot, QK_BOOT),
-  [MSG1]  = COMBO_ACTION(c_msg1),
-  [MSG2]  = COMBO_ACTION(c_msg2),
-  [MSG3]  = COMBO_ACTION(c_msg3)
+  [CAPS]   = COMBO(c_caps, KC_CAPS),
+  [BOOT]   = COMBO(c_boot, QK_BOOT),
+  [REBOOT] = COMBO(c_boot, QK_REBOOT),
+  [MSG1]   = COMBO_ACTION(c_msg1),
+  [MSG2]   = COMBO_ACTION(c_msg2)
 };
-
-// TODO @ et ~
 
 
 /* Keyboard mapping definion -- Software layout used in addition 
@@ -101,25 +98,25 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /*  NumPad Layer / Left shortcut, Right mapping
         |-1-----------|-2-----------|-3-----------|-4-----------|-5-----------|-6----------||-7-----------|-8-----------|-9-----------|-10----------|-11----------|-12----------| */
     [_NUM] = LAYOUT (
-        XXXXXXX,      MY_UNDO,      MY_CUT,       MY_COPY,      MY_PSTE,      MY_REDO,      LSFT(KC_LBRC),KC_7,         KC_8,         KC_9,         LSFT(KC_RBRC),XXXXXXX,
-        XXXXXXX,      KC_LGUI,      KC_LALT,      KC_LCTL,      KC_LSFT,      XXXXXXX,      KC_LBRC,      KC_4,         KC_5,         KC_6,         KC_RBRC,      XXXXXXX,
+        XXXXXXX,      MY_UNDO,      MY_CUT,       MY_COPY,      MY_PSTE,      MY_LSCR,      LSFT(KC_LBRC),KC_7,         KC_8,         KC_9,         LSFT(KC_RBRC),  S_DEG,
+        XXXXXXX,      KC_LGUI,      KC_LALT,      KC_LCTL,      KC_LSFT,      MY_RSCR,      KC_LBRC,      KC_4,         KC_5,         KC_6,         KC_RBRC,      XXXXXXX,
         XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,      LSFT(KC_COMM),KC_1,         KC_2,         KC_3,         LSFT(KC_DOT), XXXXXXX,
-                                                  XXXXXXX,      XXXXXXX,      XXXXXXX,      KC_ENT,       KC_0,         KC_BSPC                                                  ),
+                                                  XXXXXXX,      XXXXXXX,      XXXXXXX,      KC_ENT,       KC_0,         XXXXXXX                                                  ),
     /*                                                                        ==^^^==                                                                                             */
 
     /*  Symbols Layer / Left shortcut, Right mapping
         |-1-----------|-2-----------|-3-----------|-4-----------|-5-----------|-6----------||-7-----------|-8-----------|-9-----------|-10----------|-11----------|-12----------| */
     [_SYMB] = LAYOUT (
-        XXXXXXX,      MY_UNDO,      MY_CUT,       MY_COPY,      MY_PSTE,      MY_REDO,      KC_EXLM,      KC_QUES,      KC_GRV,       KC_CIRC,      XXXXXXX,      KC_AT,
+        XXXXXXX,      MY_UNDO,      MY_CUT,       MY_COPY,      MY_PSTE,      XXXXXXX,      KC_EXLM,      KC_QUES,      KC_AT,        KC_CIRC,      XXXXXXX,        S_DEG,
         XXXXXXX,      KC_LGUI,      KC_LALT,      KC_LCTL,      KC_LSFT,      XXXXXXX,      KC_ASTR,      KC_DLR,       KC_HASH,      KC_PERC,      KC_AMPR,      KC_SLSH,
         XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,      KC_PLUS,      KC_MINS,      KC_EQL,       KC_UNDS,      KC_PIPE,      KC_BSLS,
-                                                  XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX                                                  ),
+                                                  XXXXXXX,      XXXXXXX,      XXXXXXX,      KC_ENT,       KC_BSPC,      KC_DEL                                                   ),
     /*                                                          ==^^^==                                                                                                           */
 
     /*  Functions Layer / Left shortcut, Right mapping
         |-1-----------|-2-----------|-3-----------|-4-----------|-5-----------|-6----------||-7-----------|-8-----------|-9-----------|-10----------|-11----------|-12----------| */
     [_FCT] = LAYOUT (
-        MY_LSCR,      MY_UNDO,      MY_CUT,       MY_COPY,      MY_PSTE,      MY_REDO,      KC_PSCR,      KC_F7,        KC_F8,        KC_F9,        KC_F10,       KC_CALC,
+        MY_LSCR,      MY_UNDO,      MY_CUT,       MY_COPY,      MY_PSTE,      XXXXXXX,      KC_PSCR,      KC_F7,        KC_F8,        KC_F9,        KC_F10,       KC_CALC,
         MY_RSCR,      KC_LGUI,      KC_LALT,      KC_LCTL,      KC_LSFT,      XXXXXXX,      KC_SCRL,      KC_F4,        KC_F5,        KC_F6,        KC_F11,       XXXXXXX,
         XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,      KC_PAUS,      KC_F1,        KC_F2,        KC_F3,        KC_F12,       MY_OS,
                                                   XXXXXXX,      XXXXXXX,      XXXXXXX,      MY_LOCK,      TO(_QWERTY),  TO(_GAME)                                                ),
@@ -129,7 +126,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         |-1-----------|-2-----------|-3-----------|-4-----------|-5-----------|-6----------||-7-----------|-8-----------|-9-----------|-10----------|-11----------|-12----------| */
     [_NAV] = LAYOUT (
         XXXXXXX,      KC_PGUP,      KC_HOME,      KC_UP,        KC_END,       KC_INS,       XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX, 
-        XXXXXXX,      KC_PGDN,      KC_LEFT,      KC_DOWN,      KC_RGHT,      KC_CAPS,      XXXXXXX,      KC_LSFT,      KC_LCTL,      KC_LALT,      KC_LGUI,      XXXXXXX,
+        XXXXXXX,      KC_PGDN,      KC_LEFT,      KC_DOWN,      KC_RGHT,      XXXXXXX,      XXXXXXX,      KC_LSFT,      KC_LCTL,      KC_LALT,      KC_LGUI,      XXXXXXX,
         XXXXXXX,      XXXXXXX,      KC_VOLD,      KC_VOLU,      KC_MPLY,      KC_MUTE,      XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,
                                                   KC_ESC,       KC_TAB,       KC_SPC,       XXXXXXX,      XXXXXXX,      XXXXXXX                                                  ),
     /*                                                                                      ==^^^==                                                                               */
@@ -146,10 +143,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /*  Gaming Layer (using Turn-On layer, excape on top-right corner)
         |-1-----------|-2-----------|-3-----------|-4-----------|-5-----------|-6----------||-7-----------|-8-----------|-9-----------|-10----------|-11----------|-12----------| */
     [_GAME] = LAYOUT (
-        KC_ESC,       KC_1,         KC_2,         KC_3,         KC_4,         KC_5,         KC_6,         KC_7,         KC_8,         KC_9,         KC_0,         TO(_BASE),
-        KC_LSFT,      KC_Q,         KC_W,         KC_E,         KC_R,         KC_T,         KC_Y,         KC_HOME,      KC_UP,        KC_END,       KC_PGUP,      KC_RSFT,
-        KC_LCTL,      KC_A,         KC_S,         KC_D,         KC_F,         KC_G,         KC_H,         KC_LEFT,      KC_DOWN,      KC_RGHT,      KC_PGDN,      KC_CAPS,
-                                                  KC_TAB,       KC_LALT,      KC_SPC,       KC_ENT,       KC_BSPC,      KC_DEL                                                   ),
+        XXXXXXX,      KC_ESC,       KC_Q,         KC_W,         KC_E,         KC_R,         KC_PGUP,      KC_HOME,      KC_UP,        KC_END,       XXXXXXX,      TO(_BASE),
+        XXXXXXX,      KC_LSFT,      KC_A,         KC_S,         KC_D,         KC_F,         KC_PGDN,      KC_LEFT,      KC_DOWN,      KC_RGHT,      XXXXXXX,      KC_RSFT,
+        XXXXXXX,      KC_LCTL,      KC_Z,         KC_X,         KC_C,         KC_V,         XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,      KC_CAPS,
+                                                  KC_LALT,      KC_TAB,       KC_SPC,       KC_ENT,       KC_BSPC,      KC_DEL                                                   ),
 
     /*  Qwerty Layer (using Turn-On layer, excape on top-right corner)
         |-1-----------|-2-----------|-3-----------|-4-----------|-5-----------|-6----------||-7-----------|-8-----------|-9-----------|-10----------|-11----------|-12----------| */
@@ -163,9 +160,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /* Keyboard Jiggler callback (Similar to a mouse jiggler) */
 static uint32_t idle_callback(uint32_t trigger_time, void* cb_arg) {
-    //tap_code(KC_BRIGHTNESS_UP);
-    //tap_code(KC_BRIGHTNESS_DOWN);
-    tap_code(QK_MOUSE_BUTTON_8);
+    tap_code(QK_MOUSE_CURSOR_LEFT);
+    tap_code(QK_MOUSE_CURSOR_RIGHT);
     return IDLE_TIMEOUT_MS;
 }
 
@@ -256,7 +252,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                         tap_code16(LGUI(KC_PGUP));
                         break;
                     case MACOS:
-                        tap_code16(LGUI(KC_LEFT));
+                        tap_code16(LCTL(KC_LEFT));
                         break;
                     case WINDOWS:
                         tap_code16(LALT(KC_TAB));
@@ -274,7 +270,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                         tap_code16(LGUI(KC_PGDN));
                         break;
                     case MACOS:
-                        tap_code16(LGUI(KC_RGHT));
+                        tap_code16(LCTL(KC_RGHT));
                         break;
                     case WINDOWS:
                         tap_code16(LSA(KC_TAB));
@@ -403,10 +399,28 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 }
             }
             return false;
+
+        /* ° (US-Alt. layout) */
+        case S_DEG:
+            if (record->event.pressed) {
+                switch (os_selector) {
+                    case LINUX:
+                        tap_code16(LCTL(LSFT(KC_U)));
+                        SEND_STRING("b0\n");
+                    case MACOS:
+                        break;
+                    case WINDOWS:
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return false;
+
+
         }
     return true;
 }
-
 
 /* Combo Action definitions for custom message blocs */
 void process_combo_event(uint16_t combo_index, bool pressed) {
@@ -418,12 +432,7 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
             break;
         case MSG2:
             if (pressed) {
-                SEND_STRING("Custom text bloc 2");
-            }
-            break;
-        case MSG3:
-            if (pressed) {
-                SEND_STRING("Custom text bloc 3");
+                SEND_STRING("Custom text bloc 2\n");
             }
             break;
     }

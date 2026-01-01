@@ -7,7 +7,6 @@
 /* Timer for Keyboard jiggler function (ping every minute) */
 #define IDLE_TIMEOUT_MS 60000
 
-#define MY_REDO C(KC_Y) // Issue with MacOS
 #define MY_PSTE C(KC_V)
 #define MY_COPY C(KC_C)
 #define MY_CUT  C(KC_X)
@@ -51,19 +50,15 @@ static uint8_t os_selector = 0;
  * Caps-lock, Caps-lock toggle & custom message 
  */
 enum combo_events {
-  CAPS, BOOT, MSG1, MSG2, MSG3
+  CAPS, BOOT, MSG1, MSG2
 };
 const uint16_t PROGMEM c_caps[]  = {KC_LSFT, KC_RSFT, COMBO_END};             // = Double Side Shift
 const uint16_t PROGMEM c_boot[]  = {KC_LALT, KC_Q, KC_P, KC_GRV, COMBO_END};  // = 2x 2x Lat Top
-const uint16_t PROGMEM c_msg1[]  = {KC_R, KC_T, KC_Y, COMBO_END};
-const uint16_t PROGMEM c_msg2[]  = {KC_R, KC_T, KC_U, COMBO_END};
-const uint16_t PROGMEM c_msg3[]  = {KC_R, KC_T, KC_I, COMBO_END};
+const uint16_t PROGMEM c_msg[]  = {KC_R, KC_T, KC_Y, COMBO_END};
 combo_t key_combos[] = {
   [CAPS]  = COMBO(c_caps, KC_CAPS),
   [BOOT]  = COMBO(c_boot, QK_BOOT),
-  [MSG1]  = COMBO_ACTION(c_msg1),
-  [MSG2]  = COMBO_ACTION(c_msg2),
-  [MSG3]  = COMBO_ACTION(c_msg3)
+  [MSG]  = COMBO_ACTION(c_msg),
 };
 
 
@@ -83,7 +78,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /*  NumPad Layer / Left shortcut, Right mapping
         |-1-----------|-2-----------|-3-----------|-4-----------|-5-----------|-6----------||-7-----------|-8-----------|-9-----------|-10----------|-11----------|-12----------| */
     [_NUM] = LAYOUT (
-        XXXXXXX,      MY_UNDO,      MY_CUT,       MY_COPY,      MY_PSTE,      MY_REDO,      LSFT(KC_LBRC),KC_7,         KC_8,         KC_9,         LSFT(KC_RBRC),XXXXXXX,
+        XXXXXXX,      MY_UNDO,      MY_CUT,       MY_COPY,      MY_PSTE,      XXXXXXX,      LSFT(KC_LBRC),KC_7,         KC_8,         KC_9,         LSFT(KC_RBRC),XXXXXXX,
         XXXXXXX,      KC_LGUI,      KC_LALT,      KC_LCTL,      KC_LSFT,      XXXXXXX,      KC_LBRC,      KC_4,         KC_5,         KC_6,         KC_RBRC,      XXXXXXX,
         XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,      LSFT(KC_COMM),KC_1,         KC_2,         KC_3,         LSFT(KC_DOT), XXXXXXX,
                                                   XXXXXXX,      XXXXXXX,      XXXXXXX,      KC_ENT,       KC_0,         KC_BSPC                                                  ),
@@ -92,7 +87,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /*  Symbols Layer / Left shortcut, Right mapping
         |-1-----------|-2-----------|-3-----------|-4-----------|-5-----------|-6----------||-7-----------|-8-----------|-9-----------|-10----------|-11----------|-12----------| */
     [_SYMB] = LAYOUT (
-        XXXXXXX,      MY_UNDO,      MY_CUT,       MY_COPY,      MY_PSTE,      MY_REDO,      KC_EXLM,      KC_QUES,      KC_GRV,       KC_CIRC,      XXXXXXX,      KC_AT,
+        XXXXXXX,      MY_UNDO,      MY_CUT,       MY_COPY,      MY_PSTE,      XXXXXXX,      KC_EXLM,      KC_QUES,      KC_GRV,       KC_CIRC,      XXXXXXX,      KC_AT,
         XXXXXXX,      KC_LGUI,      KC_LALT,      KC_LCTL,      KC_LSFT,      XXXXXXX,      KC_ASTR,      KC_DLR,       KC_HASH,      KC_PERC,      KC_AMPR,      KC_SLSH,
         XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,      KC_PLUS,      KC_MINS,      KC_EQL,       KC_UNDS,      KC_PIPE,      KC_BSLS,
                                                   XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX                                                  ),
@@ -101,7 +96,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /*  Functions Layer / Left shortcut, Right mapping
         |-1-----------|-2-----------|-3-----------|-4-----------|-5-----------|-6----------||-7-----------|-8-----------|-9-----------|-10----------|-11----------|-12----------| */
     [_FCT] = LAYOUT (
-        MY_LSCR,      MY_UNDO,      MY_CUT,       MY_COPY,      MY_PSTE,      MY_REDO,      KC_PSCR,      KC_F7,        KC_F8,        KC_F9,        KC_F10,       KC_CALC,
+        MY_LSCR,      MY_UNDO,      MY_CUT,       MY_COPY,      MY_PSTE,      XXXXXXX,      KC_PSCR,      KC_F7,        KC_F8,        KC_F9,        KC_F10,       KC_CALC,
         MY_RSCR,      KC_LGUI,      KC_LALT,      KC_LCTL,      KC_LSFT,      XXXXXXX,      KC_SCRL,      KC_F4,        KC_F5,        KC_F6,        KC_F11,       XXXXXXX,
         XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,      XXXXXXX,      KC_PAUS,      KC_F1,        KC_F2,        KC_F3,        KC_F12,       MY_OS,
                                                   XXXXXXX,      XXXXXXX,      XXXXXXX,      MY_LOCK,      XXXXXXX,      TO(_GAME)                                                ),
@@ -128,8 +123,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /* Keyboard Jiggler callback (Similar to a mouse jiggler) */
 static uint32_t idle_callback(uint32_t trigger_time, void* cb_arg) {
-    tap_code(KC_BRIGHTNESS_UP);
-    tap_code(KC_BRIGHTNESS_DOWN);
+    tap_code(QK_MOUSE_CURSOR_LEFT);
+    tap_code(QK_MOUSE_CURSOR_RIGHT);
     return IDLE_TIMEOUT_MS;
 }
 
@@ -171,7 +166,7 @@ bool process_detected_host_os_kb(os_variant_t detected_os) {
         case OS_MACOS:
         case OS_IOS:
             os_selector = 1;
-            update_key_swap(false); // FIXME -- Swap Left Control and GUI
+            update_key_swap(true);
             break;
         case OS_WINDOWS:
             os_selector = 2;
@@ -202,10 +197,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
                 switch (os_selector) {
                     case MACOS:
-                        update_key_swap(false); // FIXME Swap Left Control and GUI
+                        update_key_swap(true);  // Swap Left Control and GUI
+                        SEND_STRING("Control / Command swapped");
                         break;
                     default:
                         update_key_swap(false); // Unswap Left Control and GUI
+                        SEND_STRING("Control / Command regular position");
                         break;
                 }
             }
@@ -218,7 +215,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                         tap_code16(LGUI(KC_PGUP));
                         break;
                     case MACOS:
-                        tap_code16(LGUI(KC_LEFT));
+                        tap_code16(LCTL(KC_LEFT));
                         break;
                     case WINDOWS:
                         tap_code16(LALT(KC_TAB));
@@ -236,7 +233,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                         tap_code16(LGUI(KC_PGDN));
                         break;
                     case MACOS:
-                        tap_code16(LGUI(KC_RGHT));
+                        tap_code16(LCTL(KC_RGHT));
                         break;
                     case WINDOWS:
                         tap_code16(LSA(KC_TAB));
@@ -267,23 +264,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 
-
 /* Combo Action definitions for custom message blocs */
 void process_combo_event(uint16_t combo_index, bool pressed) {
     switch(combo_index) {
-        case MSG1:
+        case MSG:
             if (pressed) {
-                SEND_STRING("Custom text bloc 1\n");
-            }
-            break;
-        case MSG2:
-            if (pressed) {
-                SEND_STRING("Custom text bloc 2\n");
-            }
-            break;
-        case MSG3:
-            if (pressed) {
-                SEND_STRING("Custom text bloc 3\n");
+                SEND_STRING("Custom text bloc\n");
             }
             break;
     }

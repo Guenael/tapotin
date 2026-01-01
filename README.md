@@ -52,7 +52,7 @@ Note: Do not follow my layout, it's very specific, but if your are curious, you 
 
 Enter the bootloader mode by holding the RP2040 reset button down while plugging it in.
 
-## Compile/Build notes (TODO)
+## Build and flash (using the container method)
 
 1. Clone this repository:
 
@@ -62,16 +62,32 @@ cd tapotin
 git submodule update --init --recursive
 cd qmk_firmware
 ```
-2. Build the application:
+2. Edit your mapping if required (e.g. `keyboards/tapotin/keymaps/default/keymap.c`)
 
+`vi keyboards/tapotin/keymaps/default/keymap.c`
+
+3. Build the firmware using Podman:
 ```bash
+podman run -it --rm --volume "$(pwd):/qmk_userspace" ghcr.io/qmk/qmk_cli:latest bash
+```
+
+And once in the container:
+```bash
+cd /qmk_userspace
 make tapotin:default
+# make tapotin:dvorak_custom_hw
 ```
-3. Flash the Raspberry Pico:
 
-```bash
-make tapotin:default:flash
-```
+4. Flash the Raspberry Pico:
+
+Put the Raspberry Pico in DFU mode: Enter the bootloader mode by holding the RP2040 reset button down while plugging it in.
+(or use the keybord shortcut -- only works if you already use this Keyboard) 
+
+Drag an drop the file on `uf2` file on the USB device. That's it!
+
+## Alternate method
+
+Use the installer script here: https://install.qmk.fm
 
 ## Documentation
 
